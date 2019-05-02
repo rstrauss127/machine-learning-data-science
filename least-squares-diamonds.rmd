@@ -1,0 +1,58 @@
+##Using least squares to examine diamond prices
+Fitting least squares linear regression using depth to explain price:
+```{r}
+lm_two = lm(price ~ depth, diamonds)
+coef(lm_two) #b
+summary(lm_two)$r.squared
+summary(lm_two)$sigma #RMSE
+sd(diamonds$price)
+```
+$b_0=5764, b_1=-29.6$
+$R^2=0.00011$ 
+$RMSE= 3989.251$ 
+$S_e=3989.44$ (standard error)
+The $R^2$ is almost 0 and $RMSE$ is relatively high, implying the price and depth are idependent.
+
+
+Least squares linear regression using carat to explain price:
+```{r}
+lm_two_car = lm(price ~ carat, diamonds)
+coef(lm_two_car) #b
+summary(lm_two_car)$r.squared
+summary(lm_two_car)$sigma #RMSE
+sd(diamonds$price)
+```
+
+What is $b$, $R^2$ and the RMSE? What was the standard error of price originally? 
+$b_0=-2256.361, b_1= 7756.426]$
+$R^2=0.85$
+$RMSE=1548.6$
+$S_e=3989.44$
+
+These metrics were expected given the appropriate or relevant visualization(s) above.
+Yes, the data looks linear, hence the high R^2 value.
+
+
+Running a least squares anova model using color to explain price:
+```{r}
+anov_mod = lm(price ~ color, diamonds)
+coef(anov_mod) #b
+summary(anov_mod)$r.squared
+summary(anov_mod)$sigma #RMSE
+sd(diamonds$price)
+```
+
+What is $b$, $R^2$ and the RMSE? What was the standard error of price originally? 
+$b=[3169.95410   -93.20162   554.93230   829.18158  1316.71510  1921.92086  2153.86392 ]$
+$R^2=0.031$
+$RMSE=3926.78$
+$S_e=3989.44$
+These metrics were not expected given the appropriate or relevant visualization(s) above?
+The color of the diamonds is rated D-J(best to worst) and intuitively, better diamonds cost more money. However, this anova model returned the highest slope for the worst color diamond and the second highest slope for the second worst color etc.
+Note: Color is a categorical variable. In the modelling process above, the categorical variable got "dummified". Each color or 'level' became its' own variable, so each gets its' own value in $b$.
+
+Fit a new model without the intercept to see if that helps(it does):
+```{r}
+anova_new = lm(price ~ 0 + color, diamonds)
+coef(anova_new)
+```
